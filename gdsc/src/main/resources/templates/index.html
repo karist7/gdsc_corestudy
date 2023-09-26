@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>GDSC 게시판</h1>
+<div class="all">
+    <div th:if="${loginId == null}">
+
+        <button onclick="location.href='/login'">로그인</button>
+        <button onclick="location.href='/register'">회원가입</button>
+    </div>
+
+    <!-- 로그인되어 있는 경우 -->
+    <div th:if="${loginId != null}">
+        <p th:text="'환영합니다, ' + ${loginId} + '님'"></p>
+        <form id="updateMember" th:action="@{'/update/' + ${session.Code}}" method="get"style="display: inline;">
+            <input type="hidden" name="update_method" value="update"/>
+            <button id="update-btn">수정</button>
+        </form>
+        <form id="deleteMember" th:action="@{'/delete/' + ${session.Code}}" method="post"style="display: inline;">
+            <input type="hidden" name="_method" value="delete"/>
+            <button id="delete-btn">삭제</button>
+        </form>
+
+        <button onclick="location.href='/logout'">로그아웃</button>
+    </div>
+    <table>
+        <tr>
+
+            <th>Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+            <th>Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+            <th>상세조회&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+
+        </tr>
+        <tr th:each="member: ${memberList}">
+            <td th:text="${member.id}"></td>
+
+            <td th:text="${member.name}"></td>
+
+            <td>
+                <!-- query string /member?id=1
+                    rest api /member/1 -->
+                <a th:href="@{|/member/${member.code}|}">조회</a>
+            </td>
+
+        </tr>
+    </table>
+</body>
+</html>
